@@ -3,10 +3,17 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { useSession } from 'next-auth/react';
 
+interface User {
+  id: string;
+  name?: string;
+  email: string;
+  role: string;
+}
+
 async function fetchUserRole(email: string) {
   const res = await fetch('/api/users');
   const users = await res.json();
-  const user = users.find((u: any) => u.email === email);
+  const user = users.find((u: User) => u.email === email);
   return user?.role || null;
 }
 

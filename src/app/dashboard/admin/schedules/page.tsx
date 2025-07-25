@@ -12,8 +12,25 @@ interface Schedule {
   items: string;
   greenhouseId: string;
 }
+interface NewSchedule {
+  description: string;
+  startDate: string;
+  endDate?: string;
+  items: string;
+  greenhouseId: string;
+}
 
-function ScheduleForm({ onSave, onCancel, initial, greenhouses }: { onSave: (data: any) => void; onCancel: () => void; initial?: any; greenhouses: any[] }) {
+interface Greenhouse {
+  id: string;
+  name: string;
+}
+
+interface User {
+  id: string;
+  role: string;
+}
+
+function ScheduleForm({ onSave, onCancel, initial, greenhouses }: { onSave: (data: NewSchedule) => void; onCancel: () => void; initial?: NewSchedule; greenhouses: Greenhouse[] }) {
   const [description, setDescription] = useState(initial?.description || "");
   const [startDate, setStartDate] = useState(initial?.startDate ? initial.startDate.slice(0, 10) : "");
   const [endDate, setEndDate] = useState(initial?.endDate ? initial.endDate.slice(0, 10) : "");
@@ -57,7 +74,7 @@ function ScheduleForm({ onSave, onCancel, initial, greenhouses }: { onSave: (dat
 export default function AdminSchedulesPage() {
   const { data: session, status } = useSession();
   const [schedules, setSchedules] = useState<Schedule[]>([]);
-  const [greenhouses, setGreenhouses] = useState<any[]>([]);
+  const [greenhouses, setGreenhouses] = useState<Greenhouse[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [showForm, setShowForm] = useState(false);
@@ -69,7 +86,7 @@ export default function AdminSchedulesPage() {
       fetch('/api/users')
         .then(res => res.json())
         .then(users => {
-          const u = users.find((u: any) => u.id === (session.user as any).id);
+          const u = users.find((u: User) => u.id === (session.user as User).id);
           setRole(u?.role || null);
         });
     }
@@ -95,7 +112,7 @@ export default function AdminSchedulesPage() {
     fetchGreenhouses();
   }, []);
 
-  const handleCreate = async (data: any) => {
+  const handleCreate = async (data: NewSchedule) => {
     setLoading(true);
     setError(null);
     try {
@@ -113,7 +130,7 @@ export default function AdminSchedulesPage() {
     setLoading(false);
   };
 
-  const handleEdit = async (data: any) => {
+  const handleEdit = async (data: Schedule) => {
     setLoading(true);
     setError(null);
     try {

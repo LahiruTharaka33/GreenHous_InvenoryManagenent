@@ -1,8 +1,17 @@
 "use client";
 import { useEffect, useState } from 'react';
 
+interface InventoryItem {
+  id: string;
+  name: string;
+  type: string;
+  quantity: number;
+  unit: string;
+  threshold: number;
+}
+
 export default function UserInventoryPage() {
-  const [items, setItems] = useState<any[]>([]);
+  const [items, setItems] = useState<InventoryItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 

@@ -10,13 +10,17 @@ interface Greenhouse {
   name: string;
   location?: string;
 }
+interface NewGreenhouse {
+  name: string;
+  location?: string;
+}
 
 const greenhouseSchema = z.object({
   name: z.string().min(2, 'Name must be at least 2 characters'),
   location: z.string().optional(),
 });
 
-function GreenhouseForm({ onSave, onCancel, initial }: { onSave: (data: any) => void; onCancel: () => void; initial?: any }) {
+function GreenhouseForm({ onSave, onCancel, initial }: { onSave: (data: NewGreenhouse) => void; onCancel: () => void; initial?: NewGreenhouse }) {
   const [name, setName] = useState(initial?.name || "");
   const [location, setLocation] = useState(initial?.location || "");
   const [errors, setErrors] = useState<{ name?: string; location?: string }>({});
@@ -113,7 +117,7 @@ export default function AdminGreenhousesPage() {
     fetchGreenhouses();
   }, []);
 
-  const handleCreate = async (data: any) => {
+  const handleCreate = async (data: NewGreenhouse) => {
     setLoading(true);
     setError(null);
     try {
@@ -130,7 +134,7 @@ export default function AdminGreenhousesPage() {
     setLoading(false);
   };
 
-  const handleEdit = async (data: any) => {
+  const handleEdit = async (data: Greenhouse) => {
     setLoading(true);
     setError(null);
     try {

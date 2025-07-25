@@ -3,10 +3,17 @@ import { useSession } from "next-auth/react";
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
+interface User {
+  id: string;
+  name?: string;
+  email: string;
+  role: string;
+}
+
 async function fetchUserRole(userId: string) {
   const res = await fetch('/api/users');
   const users = await res.json();
-  const user = users.find((u: any) => u.id === userId);
+  const user = users.find((u: User) => u.id === userId);
   return user?.role || null;
 }
 
@@ -17,7 +24,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
   useEffect(() => {
     if (status === "authenticated" && session?.user) {
-      fetchUserRole((session.user as any).id).then(fetchedRole => {
+      fetchUserRole((session.user as User).id).then(fetchedRole => {
         setRole(prev => (prev !== fetchedRole ? fetchedRole : prev));
       });
     }

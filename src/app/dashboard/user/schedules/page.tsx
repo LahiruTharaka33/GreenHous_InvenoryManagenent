@@ -2,11 +2,31 @@
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from 'react';
 
+interface Schedule {
+  id: string;
+  description: string;
+  startDate: string;
+  endDate?: string;
+  items: string;
+  greenhouseId: string;
+}
+interface Greenhouse {
+  id: string;
+  name: string;
+  location?: string;
+}
+interface Assignment {
+  id: string;
+  userId: string;
+  greenhouseId: string;
+  assignedAt?: string;
+}
+
 export default function UserSchedulesPage() {
   const { data: session, status } = useSession();
-  const [schedules, setSchedules] = useState<any[]>([]);
-  const [greenhouses, setGreenhouses] = useState<any[]>([]);
-  const [assignments, setAssignments] = useState<any[]>([]);
+  const [schedules, setSchedules] = useState<Schedule[]>([]);
+  const [greenhouses, setGreenhouses] = useState<Greenhouse[]>([]);
+  const [assignments, setAssignments] = useState<Assignment[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -21,9 +41,9 @@ export default function UserSchedulesPage() {
           setAssignments(assignments);
           setGreenhouses(greenhouses);
           // Find assigned greenhouse IDs for this user
-          const assignedIds = assignments.filter((a: any) => a.userId === session.user.id).map((a: any) => a.greenhouseId);
+          const assignedIds = assignments.filter((a: Assignment) => a.userId === session.user.id).map((a: Assignment) => a.greenhouseId);
           // Only show schedules for assigned greenhouses
-          setSchedules(schedules.filter((s: any) => assignedIds.includes(s.greenhouseId)));
+          setSchedules(schedules.filter((s: Schedule) => assignedIds.includes(s.greenhouseId)));
         })
         .catch(() => setError("Failed to load schedules"))
         .finally(() => setLoading(false));

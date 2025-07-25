@@ -3,9 +3,23 @@ import { prisma } from '../../../prisma';
 import { getServerSession } from 'next-auth/next';
 import { authOptions } from '../auth/[...nextauth]/route';
 
+interface SessionUser {
+  id: string;
+  role: string;
+  name?: string;
+  email: string;
+}
+interface InventoryItemInput {
+  name: string;
+  type: string;
+  quantity: number;
+  unit: string;
+  threshold: number;
+}
+
 async function getCurrentUserRole() {
   const session = await getServerSession(authOptions);
-  return (session?.user as any)?.role;
+  return (session?.user as SessionUser)?.role;
 }
 
 // GET /api/inventory

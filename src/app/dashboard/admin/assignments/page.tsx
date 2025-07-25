@@ -10,8 +10,24 @@ interface Assignment {
   greenhouseId: string;
   assignedAt?: string;
 }
+interface NewAssignment {
+  userId: string;
+  greenhouseId: string;
+}
 
-function AssignmentForm({ onSave, onCancel, initial, users, greenhouses }: { onSave: (data: any) => void; onCancel: () => void; initial?: any; users: any[]; greenhouses: any[] }) {
+interface User {
+  id: string;
+  name: string;
+  email: string;
+  role: string;
+}
+
+interface Greenhouse {
+  id: string;
+  name: string;
+}
+
+function AssignmentForm({ onSave, onCancel, initial, users, greenhouses }: { onSave: (data: NewAssignment) => void; onCancel: () => void; initial?: NewAssignment; users: User[]; greenhouses: Greenhouse[] }) {
   const [userId, setUserId] = useState(initial?.userId || (users[0]?.id || ""));
   const [greenhouseId, setGreenhouseId] = useState(initial?.greenhouseId || (greenhouses[0]?.id || ""));
   return (
@@ -47,8 +63,8 @@ function AssignmentForm({ onSave, onCancel, initial, users, greenhouses }: { onS
 export default function AdminAssignmentsPage() {
   const { data: session, status } = useSession();
   const [assignments, setAssignments] = useState<Assignment[]>([]);
-  const [users, setUsers] = useState<any[]>([]);
-  const [greenhouses, setGreenhouses] = useState<any[]>([]);
+  const [users, setUsers] = useState<User[]>([]);
+  const [greenhouses, setGreenhouses] = useState<Greenhouse[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [showForm, setShowForm] = useState(false);
@@ -93,7 +109,7 @@ export default function AdminAssignmentsPage() {
     fetchGreenhouses();
   }, []);
 
-  const handleCreate = async (data: any) => {
+  const handleCreate = async (data: NewAssignment) => {
     setLoading(true);
     setError(null);
     try {
@@ -110,7 +126,7 @@ export default function AdminAssignmentsPage() {
     setLoading(false);
   };
 
-  const handleEdit = async (data: any) => {
+  const handleEdit = async (data: Assignment) => {
     setLoading(true);
     setError(null);
     try {

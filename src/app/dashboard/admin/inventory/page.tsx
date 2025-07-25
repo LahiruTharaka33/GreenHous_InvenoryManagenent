@@ -12,8 +12,15 @@ interface InventoryItem {
   unit: string;
   threshold: number;
 }
+interface NewInventoryItem {
+  name: string;
+  type: string;
+  quantity: number;
+  unit: string;
+  threshold: number;
+}
 
-function InventoryForm({ onSave, onCancel, initial }: { onSave: (data: any) => void; onCancel: () => void; initial?: any }) {
+function InventoryForm({ onSave, onCancel, initial }: { onSave: (data: NewInventoryItem) => void; onCancel: () => void; initial?: NewInventoryItem }) {
   const [name, setName] = useState(initial?.name || "");
   const [type, setType] = useState(initial?.type || "FERTILIZER");
   const [quantity, setQuantity] = useState(initial?.quantity || 0);
@@ -88,7 +95,7 @@ export default function AdminInventoryPage() {
     fetchItems();
   }, []);
 
-  const handleCreate = async (data: any) => {
+  const handleCreate = async (data: NewInventoryItem) => {
     setLoading(true);
     setError(null);
     try {
@@ -105,7 +112,7 @@ export default function AdminInventoryPage() {
     setLoading(false);
   };
 
-  const handleEdit = async (data: any) => {
+  const handleEdit = async (data: InventoryItem) => {
     setLoading(true);
     setError(null);
     try {
