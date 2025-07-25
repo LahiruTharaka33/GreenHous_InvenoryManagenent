@@ -19,7 +19,6 @@ export async function GET(req: NextRequest) {
   if (!session) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
-  // Any authenticated user can list users
   const users = await prisma.user.findMany();
   return NextResponse.json(users);
 }
