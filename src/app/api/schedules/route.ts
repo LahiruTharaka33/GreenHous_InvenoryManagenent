@@ -3,16 +3,9 @@ import { prisma } from '../../../prisma';
 import { getServerSession } from 'next-auth/next';
 import { authOptions } from '../auth/[...nextauth]/route';
 
-interface SessionUser {
-  id: string;
-  name?: string;
-  email: string;
-  role: string;
-}
-
 async function getCurrentUserRole() {
   const session = await getServerSession(authOptions);
-  return (session?.user as SessionUser)?.role;
+  return (session?.user as any)?.role;
 }
 
 // GET /api/schedules
@@ -24,8 +17,8 @@ export async function GET(_req: NextRequest) {
 // POST /api/schedules
 export async function POST(req: NextRequest) {
   const session = await getServerSession(authOptions);
-  const role = (session?.user as SessionUser)?.role;
-  const userId = (session?.user as SessionUser)?.id;
+  const role = (session?.user as any)?.role;
+  const userId = (session?.user as any)?.id;
   if (role !== 'ADMIN') {
     return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
   }
