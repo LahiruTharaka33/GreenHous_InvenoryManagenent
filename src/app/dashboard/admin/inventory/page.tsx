@@ -4,6 +4,15 @@ import { useEffect, useState } from 'react';
 import SkeletonTable from "@/app/components/SkeletonTable";
 import { PlusIcon } from "@heroicons/react/24/solid";
 
+interface InventoryItem {
+  id: string;
+  name: string;
+  type: string;
+  quantity: number;
+  unit: string;
+  threshold: number;
+}
+
 function InventoryForm({ onSave, onCancel, initial }: { onSave: (data: any) => void; onCancel: () => void; initial?: any }) {
   const [name, setName] = useState(initial?.name || "");
   const [type, setType] = useState(initial?.type || "FERTILIZER");
@@ -48,11 +57,11 @@ function InventoryForm({ onSave, onCancel, initial }: { onSave: (data: any) => v
 
 export default function AdminInventoryPage() {
   const { data: session, status } = useSession();
-  const [items, setItems] = useState<any[]>([]);
+  const [items, setItems] = useState<InventoryItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [showForm, setShowForm] = useState(false);
-  const [editItem, setEditItem] = useState<any | null>(null);
+  const [editItem, setEditItem] = useState<InventoryItem | null>(null);
   const [role, setRole] = useState<string | null>(null);
 
   useEffect(() => {

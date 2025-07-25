@@ -5,6 +5,12 @@ import { z } from 'zod';
 import SkeletonTable from "@/app/components/SkeletonTable";
 import { PlusIcon } from "@heroicons/react/24/solid";
 
+interface Greenhouse {
+  id: string;
+  name: string;
+  location?: string;
+}
+
 const greenhouseSchema = z.object({
   name: z.string().min(2, 'Name must be at least 2 characters'),
   location: z.string().optional(),
@@ -76,11 +82,11 @@ function GreenhouseForm({ onSave, onCancel, initial }: { onSave: (data: any) => 
 
 export default function AdminGreenhousesPage() {
   const { data: session, status } = useSession();
-  const [greenhouses, setGreenhouses] = useState<any[]>([]);
+  const [greenhouses, setGreenhouses] = useState<Greenhouse[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [showForm, setShowForm] = useState(false);
-  const [editGreenhouse, setEditGreenhouse] = useState<any | null>(null);
+  const [editGreenhouse, setEditGreenhouse] = useState<Greenhouse | null>(null);
   const [role, setRole] = useState<string | null>(null);
 
   useEffect(() => {

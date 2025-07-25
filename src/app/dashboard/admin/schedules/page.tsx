@@ -4,6 +4,15 @@ import { useEffect, useState } from 'react';
 import SkeletonTable from "@/app/components/SkeletonTable";
 import { PlusIcon } from "@heroicons/react/24/solid";
 
+interface Schedule {
+  id: string;
+  description: string;
+  startDate: string;
+  endDate?: string;
+  items: string;
+  greenhouseId: string;
+}
+
 function ScheduleForm({ onSave, onCancel, initial, greenhouses }: { onSave: (data: any) => void; onCancel: () => void; initial?: any; greenhouses: any[] }) {
   const [description, setDescription] = useState(initial?.description || "");
   const [startDate, setStartDate] = useState(initial?.startDate ? initial.startDate.slice(0, 10) : "");
@@ -47,12 +56,12 @@ function ScheduleForm({ onSave, onCancel, initial, greenhouses }: { onSave: (dat
 
 export default function AdminSchedulesPage() {
   const { data: session, status } = useSession();
-  const [schedules, setSchedules] = useState<any[]>([]);
+  const [schedules, setSchedules] = useState<Schedule[]>([]);
   const [greenhouses, setGreenhouses] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [showForm, setShowForm] = useState(false);
-  const [editSchedule, setEditSchedule] = useState<any | null>(null);
+  const [editSchedule, setEditSchedule] = useState<Schedule | null>(null);
   const [role, setRole] = useState<string | null>(null);
 
   useEffect(() => {

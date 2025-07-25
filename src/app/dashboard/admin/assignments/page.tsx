@@ -4,6 +4,13 @@ import { useEffect, useState } from 'react';
 import SkeletonTable from "@/app/components/SkeletonTable";
 import { PlusIcon } from "@heroicons/react/24/solid";
 
+interface Assignment {
+  id: string;
+  userId: string;
+  greenhouseId: string;
+  assignedAt?: string;
+}
+
 function AssignmentForm({ onSave, onCancel, initial, users, greenhouses }: { onSave: (data: any) => void; onCancel: () => void; initial?: any; users: any[]; greenhouses: any[] }) {
   const [userId, setUserId] = useState(initial?.userId || (users[0]?.id || ""));
   const [greenhouseId, setGreenhouseId] = useState(initial?.greenhouseId || (greenhouses[0]?.id || ""));
@@ -39,13 +46,13 @@ function AssignmentForm({ onSave, onCancel, initial, users, greenhouses }: { onS
 
 export default function AdminAssignmentsPage() {
   const { data: session, status } = useSession();
-  const [assignments, setAssignments] = useState<any[]>([]);
+  const [assignments, setAssignments] = useState<Assignment[]>([]);
   const [users, setUsers] = useState<any[]>([]);
   const [greenhouses, setGreenhouses] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [showForm, setShowForm] = useState(false);
-  const [editAssignment, setEditAssignment] = useState<any | null>(null);
+  const [editAssignment, setEditAssignment] = useState<Assignment | null>(null);
   const [role, setRole] = useState<string | null>(null);
 
   useEffect(() => {
