@@ -15,12 +15,18 @@ interface Greenhouse {
   name: string;
   location?: string;
 }
+interface Assignment {
+  id: string;
+  userId: string;
+  greenhouseId: string;
+  assignedAt?: string;
+}
 
 export default function UserSchedulesPage() {
   const { data: session, status } = useSession();
   const [schedules, setSchedules] = useState<Schedule[]>([]);
   const [greenhouses, setGreenhouses] = useState<Greenhouse[]>([]);
-  const [assignments, setAssignments] = useState<any[]>([]);
+  const [assignments, setAssignments] = useState<Assignment[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -35,7 +41,7 @@ export default function UserSchedulesPage() {
           setAssignments(assignments);
           setGreenhouses(greenhouses);
           // Find assigned greenhouse IDs for this user
-          const assignedIds = assignments.filter((a) => a.userId === session.user.id).map((a) => a.greenhouseId);
+          const assignedIds = assignments.filter((a: Assignment) => a.userId === session.user.id).map((a: Assignment) => a.greenhouseId);
           // Only show schedules for assigned greenhouses
           setSchedules(schedules.filter((s: Schedule) => assignedIds.includes(s.greenhouseId)));
         })

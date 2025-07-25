@@ -3,6 +3,13 @@ import { prisma } from '../../../prisma';
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "../auth/[...nextauth]/route";
 
+interface SessionUser {
+  id: string;
+  name?: string;
+  email: string;
+  role: string;
+}
+
 // GET /api/users
 export async function GET(_req: NextRequest) {
   const session = await getServerSession(authOptions);
@@ -16,7 +23,7 @@ export async function GET(_req: NextRequest) {
 // POST /api/users
 export async function POST(req: NextRequest) {
   const session = await getServerSession(authOptions);
-  const userRole = (session?.user as any)?.role;
+  const userRole = (session?.user as SessionUser)?.role;
   if (!session || userRole !== 'ADMIN') {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
@@ -28,7 +35,7 @@ export async function POST(req: NextRequest) {
 // PUT /api/users
 export async function PUT(req: NextRequest) {
   const session = await getServerSession(authOptions);
-  const userRole = (session?.user as any)?.role;
+  const userRole = (session?.user as SessionUser)?.role;
   if (!session || userRole !== 'ADMIN') {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
@@ -41,7 +48,7 @@ export async function PUT(req: NextRequest) {
 // DELETE /api/users
 export async function DELETE(req: NextRequest) {
   const session = await getServerSession(authOptions);
-  const userRole = (session?.user as any)?.role;
+  const userRole = (session?.user as SessionUser)?.role;
   if (!session || userRole !== 'ADMIN') {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
