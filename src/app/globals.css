@@ -1,8 +1,11 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
+  --background: #f6f8fa;
   --foreground: #171717;
+  --card-bg: #fff;
+  --card-radius: 1.5rem;
+  --card-shadow: 0 4px 32px 0 rgba(60, 72, 88, 0.08);
 }
 
 @theme inline {
@@ -14,13 +17,48 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
+    --background: #181c20;
     --foreground: #ededed;
+    --card-bg: #23272f;
+    --card-shadow: 0 4px 32px 0 rgba(0,0,0,0.25);
   }
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans), Arial, Helvetica, sans-serif;
+  min-height: 100vh;
+}
+
+.card {
+  background: var(--card-bg);
+  border-radius: var(--card-radius);
+  box-shadow: var(--card-shadow);
+  padding: 2rem;
+}
+
+.table-modern {
+  border-radius: 1rem;
+  overflow: hidden;
+  border-collapse: separate;
+  border-spacing: 0;
+  box-shadow: 0 2px 16px 0 rgba(60, 72, 88, 0.06);
+}
+.table-modern th, .table-modern td {
+  padding: 1rem;
+  border-bottom: 1px solid #e5e7eb;
+  background: #fff;
+}
+.table-modern th {
+  background: #f3f4f6;
+  font-weight: 600;
+  color: #374151;
+}
+.table-modern tr:last-child td {
+  border-bottom: none;
+}
+.table-modern tbody tr:hover {
+  background: #f0fdf4;
+  transition: background 0.2s;
 }

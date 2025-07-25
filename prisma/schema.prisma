@@ -1,0 +1,92 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id               String               @id @default(cuid())
+  email            String               @unique
+  name             String?
+  role             Role                 @default(USER)
+  createdAt        DateTime             @default(now())
+  updatedAt        DateTime             @updatedAt
+  hashedPassword   String?
+  assignments      Assignment[]
+  createdSchedules FertilizerSchedule[] @relation("CreatedBy")
+  updatedSchedules FertilizerSchedule[] @relation("UpdatedBy")
+  inventoryLogs    InventoryLog[]
+}
+
+model Greenhouse {
+  id          String               @id @default(cuid())
+  name        String
+  location    String?
+  createdAt   DateTime             @default(now())
+  updatedAt   DateTime             @updatedAt
+  assignments Assignment[]
+  schedules   FertilizerSchedule[]
+}
+
+model Assignment {
+  id           String     @id @default(cuid())
+  userId       String
+  greenhouseId String
+  assignedAt   DateTime   @default(now())
+  greenhouse   Greenhouse @relation(fields: [greenhouseId], references: [id])
+  user         User       @relation(fields: [userId], references: [id])
+}
+
+model FertilizerSchedule {
+  id           String     @id @default(cuid())
+  greenhouseId String
+  description  String
+  startDate    DateTime
+  endDate      DateTime?
+  items        String
+  createdById  String
+  updatedById  String?
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+  createdBy    User       @relation("CreatedBy", fields: [createdById], references: [id])
+  greenhouse   Greenhouse @relation(fields: [greenhouseId], references: [id])
+  updatedBy    User?      @relation("UpdatedBy", fields: [updatedById], references: [id])
+}
+
+model InventoryItem {
+  id        String         @id @default(cuid())
+  name      String
+  type      InventoryType
+  quantity  Int
+  unit      String
+  threshold Int
+  createdAt DateTime       @default(now())
+  updatedAt DateTime       @updatedAt
+  logs      InventoryLog[]
+}
+
+model InventoryLog {
+  id        String        @id @default(cuid())
+  itemId    String
+  change    Int
+  reason    String?
+  userId    String?
+  createdAt DateTime      @default(now())
+  item      InventoryItem @relation(fields: [itemId], references: [id])
+  user      User?         @relation(fields: [userId], references: [id])
+}
+
+enum Role {
+  ADMIN
+  USER
+}
+
+enum InventoryType {
+  FERTILIZER
+  SEED
+  PESTICIDE
+  TOOL
+}
