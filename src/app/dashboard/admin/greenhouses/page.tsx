@@ -14,6 +14,12 @@ interface NewGreenhouse {
   name: string;
   location?: string;
 }
+interface User {
+  id: string;
+  name: string;
+  email: string;
+  role: string;
+}
 
 const greenhouseSchema = z.object({
   name: z.string().min(2, 'Name must be at least 2 characters'),
@@ -33,9 +39,12 @@ function GreenhouseForm({ onSave, onCancel, initial }: GreenhouseFormProps) {
   const validate = () => {
     const result = greenhouseSchema.safeParse({ name, location });
     if (!result.success) {
-      const fieldErrors: any = {};
+      const fieldErrors: Record<string, string | undefined> = {};
       for (const err of result.error.issues) {
-        fieldErrors[err.path[0]] = err.message;
+        const key = err.path[0];
+        if (typeof key === 'string') {
+          fieldErrors[key] = err.message;
+        }
       }
       setErrors(fieldErrors);
       return false;
@@ -102,7 +111,7 @@ export default function AdminGreenhousesPage() {
       fetch('/api/users')
         .then(res => res.json())
         .then(users => {
-          const u = users.find((u: any) => u.id === (session.user as any).id);
+          const u = users.find((u: User) => u.id === (session.user as User).id);
           setRole(prev => (prev !== (u?.role || null) ? (u?.role || null) : prev));
         });
     }

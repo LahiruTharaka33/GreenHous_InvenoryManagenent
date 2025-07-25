@@ -8,6 +8,13 @@ import { PrismaAdapter } from '@next-auth/prisma-adapter';
 import { prisma } from '@/prisma';
 import { compare } from 'bcryptjs';
 
+interface SessionUser {
+  id: string;
+  name?: string;
+  email: string;
+  role: string;
+}
+
 export const authOptions = {
   adapter: PrismaAdapter(prisma),
   providers: [
@@ -41,10 +48,11 @@ export const authOptions = {
   callbacks: {
     async session({ session, token, user }: { session: Session; token: JWT; user?: User }) {
       if (session?.user) {
-        (session.user as any).id = token.sub as string;
+        const sessionUser = session.user as SessionUser;
+        sessionUser.id = token.sub as string;
         // Add role to session.user
         const dbUser = await prisma.user.findUnique({ where: { email: session.user.email as string } });
-        (session.user as any).role = dbUser?.role || 'USER';
+        sessionUser.role = dbUser?.role || 'USER';
       }
       return session;
     },

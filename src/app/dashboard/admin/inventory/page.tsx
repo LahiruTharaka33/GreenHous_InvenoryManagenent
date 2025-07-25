@@ -19,6 +19,12 @@ interface NewInventoryItem {
   unit: string;
   threshold: number;
 }
+interface User {
+  id: string;
+  name: string;
+  email: string;
+  role: string;
+}
 
 type InventoryFormProps =
   | { onSave: (data: NewInventoryItem) => void; initial?: undefined; onCancel: () => void }
@@ -80,7 +86,7 @@ export default function AdminInventoryPage() {
       fetch('/api/users')
         .then(res => res.json())
         .then(users => {
-          const u = users.find((u: any) => u.id === (session.user as any).id);
+          const u = users.find((u: User) => u.id === (session.user as User).id);
           setRole(u?.role || null);
         });
     }

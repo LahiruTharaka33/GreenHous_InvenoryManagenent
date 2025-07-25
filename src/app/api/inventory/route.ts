@@ -5,11 +5,12 @@ import { authOptions } from '../auth/[...nextauth]/route';
 
 interface SessionUser {
   id: string;
-  role: string;
   name?: string;
   email: string;
+  role: string;
 }
-interface InventoryItemInput {
+interface InventoryItem {
+  id: string;
   name: string;
   type: string;
   quantity: number;

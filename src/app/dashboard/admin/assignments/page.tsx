@@ -80,7 +80,7 @@ export default function AdminAssignmentsPage() {
       fetch('/api/users')
         .then(res => res.json())
         .then(users => {
-          const u = users.find((u: any) => u.id === (session.user as any).id);
+          const u = users.find((u: User) => u.id === (session.user as User).id);
           setRole(u?.role || null);
         });
     }

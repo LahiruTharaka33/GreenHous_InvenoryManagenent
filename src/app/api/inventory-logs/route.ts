@@ -5,9 +5,17 @@ import { authOptions } from '../auth/[...nextauth]/route';
 
 interface SessionUser {
   id: string;
-  role: string;
   name?: string;
   email: string;
+  role: string;
+}
+interface InventoryLog {
+  id: string;
+  itemId: string;
+  change: number;
+  reason?: string;
+  userId?: string;
+  createdAt: string;
 }
 interface InventoryLogInput {
   itemId: string;
