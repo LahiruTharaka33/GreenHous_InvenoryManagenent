@@ -53,7 +53,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         <Link href="/dashboard/admin/greenhouses">Greenhouses</Link>
         <Link href="/dashboard/admin/schedules">Schedules</Link>
         <Link href="/dashboard/admin/inventory">Inventory</Link>
-        <a href="/dashboard/admin/reports">Reports</a>
+        <Link href="/dashboard/admin/reports">Reports</Link>
       </nav>
       <main>{children}</main>
     </div>
