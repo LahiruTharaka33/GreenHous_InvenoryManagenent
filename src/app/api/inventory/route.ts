@@ -9,14 +9,6 @@ interface SessionUser {
   email: string;
   role: string;
 }
-interface InventoryItem {
-  id: string;
-  name: string;
-  type: string;
-  quantity: number;
-  unit: string;
-  threshold: number;
-}
 
 async function getCurrentUserRole() {
   const session = await getServerSession(authOptions);

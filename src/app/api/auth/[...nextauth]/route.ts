@@ -46,7 +46,7 @@ export const authOptions = {
     strategy: 'jwt' as const,
   },
   callbacks: {
-    async session({ session, token, user }: { session: Session; token: JWT; user?: User }) {
+    async session({ session, token, user: _user }: { session: Session; token: JWT; user?: User }) {
       if (session?.user) {
         const sessionUser = session.user as SessionUser;
         sessionUser.id = token.sub as string;

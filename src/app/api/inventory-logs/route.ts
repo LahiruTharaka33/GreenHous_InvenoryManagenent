@@ -9,14 +9,6 @@ interface SessionUser {
   email: string;
   role: string;
 }
-interface InventoryLog {
-  id: string;
-  itemId: string;
-  change: number;
-  reason?: string;
-  userId?: string;
-  createdAt: string;
-}
 interface InventoryLogInput {
   itemId: string;
   change: number;

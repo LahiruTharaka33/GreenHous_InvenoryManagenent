@@ -9,21 +9,6 @@ interface SessionUser {
   email: string;
   role: string;
 }
-interface Schedule {
-  id: string;
-  description: string;
-  startDate: string;
-  endDate?: string;
-  items: string;
-  greenhouseId: string;
-}
-interface ScheduleInput {
-  description: string;
-  startDate: string;
-  endDate?: string;
-  items: string;
-  greenhouseId: string;
-}
 
 async function getCurrentUserRole() {
   const session = await getServerSession(authOptions);

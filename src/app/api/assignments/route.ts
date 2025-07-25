@@ -9,16 +9,6 @@ interface SessionUser {
   email: string;
   role: string;
 }
-interface Assignment {
-  id: string;
-  userId: string;
-  greenhouseId: string;
-  assignedAt?: string;
-}
-interface AssignmentInput {
-  userId: string;
-  greenhouseId: string;
-}
 
 async function getCurrentUserRole() {
   const session = await getServerSession(authOptions);

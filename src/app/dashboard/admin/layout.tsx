@@ -2,6 +2,7 @@
 import { useSession } from "next-auth/react";
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import Link from 'next/link';
 
 interface User {
   id: string;
@@ -48,10 +49,10 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   return (
     <div>
       <nav className="flex gap-4 p-4 border-b">
-        <a href="/dashboard/admin/users">Users</a>
-        <a href="/dashboard/admin/greenhouses">Greenhouses</a>
-        <a href="/dashboard/admin/schedules">Schedules</a>
-        <a href="/dashboard/admin/inventory">Inventory</a>
+        <Link href="/dashboard/admin/users">Users</Link>
+        <Link href="/dashboard/admin/greenhouses">Greenhouses</Link>
+        <Link href="/dashboard/admin/schedules">Schedules</Link>
+        <Link href="/dashboard/admin/inventory">Inventory</Link>
         <a href="/dashboard/admin/reports">Reports</a>
       </nav>
       <main>{children}</main>

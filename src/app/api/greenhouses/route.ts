@@ -9,15 +9,6 @@ interface SessionUser {
   email: string;
   role: string;
 }
-interface Greenhouse {
-  id: string;
-  name: string;
-  location?: string;
-}
-interface GreenhouseInput {
-  name: string;
-  location?: string;
-}
 
 async function getCurrentUserRole() {
   const session = await getServerSession(authOptions);

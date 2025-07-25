@@ -26,7 +26,7 @@ export default function UserSchedulesPage() {
   const { data: session, status } = useSession();
   const [schedules, setSchedules] = useState<Schedule[]>([]);
   const [greenhouses, setGreenhouses] = useState<Greenhouse[]>([]);
-  const [assignments, setAssignments] = useState<Assignment[]>([]);
+  const [_assignments, setAssignments] = useState<Assignment[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 

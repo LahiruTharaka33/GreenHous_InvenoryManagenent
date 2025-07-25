@@ -33,7 +33,7 @@ export default function SignUpPage() {
         // Optionally redirect to sign-in page after a delay
         setTimeout(() => router.push("/auth/signin"), 1500);
       }
-    } catch (err) {
+    } catch (_err) {
       setError("Something went wrong.");
     } finally {
       setLoading(false);
