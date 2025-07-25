@@ -16,7 +16,7 @@ async function getCurrentUserRole() {
 }
 
 // GET /api/schedules
-export async function GET(req: NextRequest) {
+export async function GET(_req: NextRequest) {
   const schedules = await prisma.fertilizerSchedule.findMany();
   return NextResponse.json(schedules);
 }

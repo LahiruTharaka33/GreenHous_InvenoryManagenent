@@ -16,7 +16,7 @@ async function getCurrentUserRole() {
 }
 
 // GET /api/inventory-logs
-export async function GET(req: NextRequest) {
+export async function GET(_req: NextRequest) {
   const logs = await prisma.inventoryLog.findMany();
   return NextResponse.json(logs);
 }
