@@ -20,7 +20,11 @@ const greenhouseSchema = z.object({
   location: z.string().optional(),
 });
 
-function GreenhouseForm({ onSave, onCancel, initial }: { onSave: (data: NewGreenhouse) => void; onCancel: () => void; initial?: NewGreenhouse }) {
+type GreenhouseFormProps =
+  | { onSave: (data: NewGreenhouse) => void; initial?: undefined; onCancel: () => void }
+  | { onSave: (data: Partial<Greenhouse>) => void; initial: Greenhouse; onCancel: () => void };
+
+function GreenhouseForm({ onSave, onCancel, initial }: GreenhouseFormProps) {
   const [name, setName] = useState(initial?.name || "");
   const [location, setLocation] = useState(initial?.location || "");
   const [errors, setErrors] = useState<{ name?: string; location?: string }>({});
@@ -190,7 +194,11 @@ export default function AdminGreenhousesPage() {
         <GreenhouseForm onSave={handleCreate} onCancel={() => setShowForm(false)} />
       )}
       {editGreenhouse && (
-        <GreenhouseForm initial={editGreenhouse} onSave={handleEdit} onCancel={() => setEditGreenhouse(null)} />
+        <GreenhouseForm
+          initial={editGreenhouse}
+          onSave={data => handleEdit({ ...editGreenhouse, ...data })}
+          onCancel={() => setEditGreenhouse(null)}
+        />
       )}
       <table className="table-modern w-full border mt-4 bg-white">
         <thead>

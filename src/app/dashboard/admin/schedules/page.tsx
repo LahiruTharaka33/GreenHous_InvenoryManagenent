@@ -30,7 +30,11 @@ interface User {
   role: string;
 }
 
-function ScheduleForm({ onSave, onCancel, initial, greenhouses }: { onSave: (data: NewSchedule) => void; onCancel: () => void; initial?: NewSchedule; greenhouses: Greenhouse[] }) {
+type ScheduleFormProps =
+  | { onSave: (data: NewSchedule) => void; initial?: undefined; greenhouses: Greenhouse[]; onCancel: () => void }
+  | { onSave: (data: Partial<Schedule>) => void; initial: Schedule; greenhouses: Greenhouse[]; onCancel: () => void };
+
+function ScheduleForm({ onSave, onCancel, initial, greenhouses }: ScheduleFormProps) {
   const [description, setDescription] = useState(initial?.description || "");
   const [startDate, setStartDate] = useState(initial?.startDate ? initial.startDate.slice(0, 10) : "");
   const [endDate, setEndDate] = useState(initial?.endDate ? initial.endDate.slice(0, 10) : "");
@@ -40,7 +44,7 @@ function ScheduleForm({ onSave, onCancel, initial, greenhouses }: { onSave: (dat
     <form
       onSubmit={e => {
         e.preventDefault();
-        onSave({ description, startDate, endDate: endDate || null, items, greenhouseId });
+        onSave({ description, startDate, endDate: endDate || undefined, items, greenhouseId });
       }}
       className="flex flex-col gap-4 p-4 border rounded-xl bg-white shadow max-w-md"
     >
@@ -188,7 +192,7 @@ export default function AdminSchedulesPage() {
         <ScheduleForm greenhouses={greenhouses} onSave={handleCreate} onCancel={() => setShowForm(false)} />
       )}
       {editSchedule && (
-        <ScheduleForm greenhouses={greenhouses} initial={editSchedule} onSave={handleEdit} onCancel={() => setEditSchedule(null)} />
+        <ScheduleForm greenhouses={greenhouses} initial={editSchedule} onSave={data => handleEdit({ ...editSchedule, ...data })} onCancel={() => setEditSchedule(null)} />
       )}
       <table className="table-modern w-full border mt-4 bg-white">
         <thead>

@@ -27,7 +27,11 @@ interface Greenhouse {
   name: string;
 }
 
-function AssignmentForm({ onSave, onCancel, initial, users, greenhouses }: { onSave: (data: NewAssignment) => void; onCancel: () => void; initial?: NewAssignment; users: User[]; greenhouses: Greenhouse[] }) {
+type AssignmentFormProps =
+  | { onSave: (data: NewAssignment) => void; users: User[]; greenhouses: Greenhouse[]; onCancel: () => void; initial?: undefined }
+  | { onSave: (data: Partial<Assignment>) => void; users: User[]; greenhouses: Greenhouse[]; initial: Assignment; onCancel: () => void };
+
+function AssignmentForm({ onSave, onCancel, initial, users, greenhouses }: AssignmentFormProps) {
   const [userId, setUserId] = useState(initial?.userId || (users[0]?.id || ""));
   const [greenhouseId, setGreenhouseId] = useState(initial?.greenhouseId || (greenhouses[0]?.id || ""));
   return (
@@ -184,7 +188,13 @@ export default function AdminAssignmentsPage() {
         <AssignmentForm users={users} greenhouses={greenhouses} onSave={handleCreate} onCancel={() => setShowForm(false)} />
       )}
       {editAssignment && (
-        <AssignmentForm users={users} greenhouses={greenhouses} initial={editAssignment} onSave={handleEdit} onCancel={() => setEditAssignment(null)} />
+        <AssignmentForm
+          users={users}
+          greenhouses={greenhouses}
+          initial={editAssignment}
+          onSave={data => handleEdit({ ...editAssignment, ...data })}
+          onCancel={() => setEditAssignment(null)}
+        />
       )}
       <table className="table-modern w-full border mt-4 bg-white">
         <thead>

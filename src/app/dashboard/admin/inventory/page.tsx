@@ -20,7 +20,11 @@ interface NewInventoryItem {
   threshold: number;
 }
 
-function InventoryForm({ onSave, onCancel, initial }: { onSave: (data: NewInventoryItem) => void; onCancel: () => void; initial?: NewInventoryItem }) {
+type InventoryFormProps =
+  | { onSave: (data: NewInventoryItem) => void; initial?: undefined; onCancel: () => void }
+  | { onSave: (data: Partial<InventoryItem>) => void; initial: InventoryItem; onCancel: () => void };
+
+function InventoryForm({ onSave, onCancel, initial }: InventoryFormProps) {
   const [name, setName] = useState(initial?.name || "");
   const [type, setType] = useState(initial?.type || "FERTILIZER");
   const [quantity, setQuantity] = useState(initial?.quantity || 0);
@@ -46,13 +50,13 @@ function InventoryForm({ onSave, onCancel, initial }: { onSave: (data: NewInvent
         </select>
       </label>
       <label className="font-semibold mb-1">Quantity
-        <input className="border rounded-lg p-2 w-full focus:ring-2 focus:ring-green-200 focus:border-green-500 transition" type="number" value={quantity} onChange={e => setQuantity(e.target.value)} required />
+        <input className="border rounded-lg p-2 w-full focus:ring-2 focus:ring-green-200 focus:border-green-500 transition" type="number" value={quantity} onChange={e => setQuantity(Number(e.target.value))} required />
       </label>
       <label className="font-semibold mb-1">Unit
         <input className="border rounded-lg p-2 w-full focus:ring-2 focus:ring-green-200 focus:border-green-500 transition" value={unit} onChange={e => setUnit(e.target.value)} required />
       </label>
       <label className="font-semibold mb-1">Low-stock Threshold
-        <input className="border rounded-lg p-2 w-full focus:ring-2 focus:ring-green-200 focus:border-green-500 transition" type="number" value={threshold} onChange={e => setThreshold(e.target.value)} required />
+        <input className="border rounded-lg p-2 w-full focus:ring-2 focus:ring-green-200 focus:border-green-500 transition" type="number" value={threshold} onChange={e => setThreshold(Number(e.target.value))} required />
       </label>
       <div className="flex gap-2 mt-2">
         <button type="submit" className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg font-semibold transition">Save</button>
@@ -170,7 +174,11 @@ export default function AdminInventoryPage() {
         <InventoryForm onSave={handleCreate} onCancel={() => setShowForm(false)} />
       )}
       {editItem && (
-        <InventoryForm initial={editItem} onSave={handleEdit} onCancel={() => setEditItem(null)} />
+        <InventoryForm
+          initial={editItem}
+          onSave={data => handleEdit({ ...editItem, ...data })}
+          onCancel={() => setEditItem(null)}
+        />
       )}
       <table className="table-modern w-full border mt-4 bg-white">
         <thead>
