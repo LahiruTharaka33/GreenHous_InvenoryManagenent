@@ -1,19 +1,21 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { prisma } from '../../../prisma';
 import { getServerSession } from 'next-auth/next';
-import { authOptions } from '@/lib/authOptions';
-
-interface SessionUser {
-  id: string;
-  name?: string;
-  email: string;
-  role: string;
-}
+import { authOptions, SessionUser } from '../../../lib/authOptions';
+import { prisma } from '../../../prisma';
 
 async function getCurrentUserRole() {
   const session = await getServerSession(authOptions);
   return (session?.user as SessionUser)?.role;
 }
+
+type InventoryLogInput = {
+  greenhouseId: string;
+  action: string;
+  quantity: number;
+  timestamp?: string; // ISO string, optional
+  userId?: string;    // optional, if tracking who made the log
+  notes?: string;     // optional, for any extra info
+};
 
 // GET /api/inventory-logs
 export async function GET(_req: NextRequest) {

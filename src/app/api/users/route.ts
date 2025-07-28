@@ -1,14 +1,7 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { prisma } from '../../../prisma';
+import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth/next";
-import { authOptions } from '@/lib/authOptions';
-
-interface SessionUser {
-  id: string;
-  name?: string;
-  email: string;
-  role: string;
-}
+import { authOptions, SessionUser } from '../../../lib/authOptions';
+import { prisma } from '../../../prisma';
 
 // GET /api/users
 export async function GET(_req: NextRequest) {
