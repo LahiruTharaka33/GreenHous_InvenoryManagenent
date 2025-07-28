@@ -1,13 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '../../../prisma';
 import { getServerSession } from 'next-auth/next';
-import { authOptions } from '../auth/[...nextauth]/route';
+import { authOptions } from '@/lib/authOptions';
 
 interface SessionUser {
   id: string;
   name?: string;
   email: string;
-  role: string;
+  role: string; 
 }
 
 async function getCurrentUserRole() {
