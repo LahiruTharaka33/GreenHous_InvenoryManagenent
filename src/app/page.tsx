@@ -1,5 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
+import PushNotificationManager from "./components/PushNotificationManager";
+import InstallPrompt from "./components/InstallPrompt";
 
 export default function Home() {
   return (
@@ -284,6 +286,10 @@ export default function Home() {
           </div>
         </div>
       </footer>
+      
+      {/* PWA Components */}
+      <PushNotificationManager />
+      <InstallPrompt />
     </div>
   );
 }
