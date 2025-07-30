@@ -29,13 +29,35 @@ body {
   color: var(--foreground);
   font-family: var(--font-sans), Arial, Helvetica, sans-serif;
   min-height: 100vh;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+/* Enable text selection for content areas */
+.card, p, h1, h2, h3, h4, h5, h6, span, div {
+  -webkit-user-select: text;
+  -khtml-user-select: text;
+  -moz-user-select: text;
+  -ms-user-select: text;
+  user-select: text;
 }
 
 .card {
   background: var(--card-bg);
   border-radius: var(--card-radius);
   box-shadow: var(--card-shadow);
-  padding: 2rem;
+  padding: 1rem;
+}
+
+@media (min-width: 768px) {
+  .card {
+    padding: 2rem;
+  }
 }
 
 .table-modern {
@@ -45,20 +67,93 @@ body {
   border-spacing: 0;
   box-shadow: 0 2px 16px 0 rgba(60, 72, 88, 0.06);
 }
+
 .table-modern th, .table-modern td {
-  padding: 1rem;
+  padding: 0.75rem;
   border-bottom: 1px solid #e5e7eb;
   background: #fff;
 }
+
+@media (min-width: 768px) {
+  .table-modern th, .table-modern td {
+    padding: 1rem;
+  }
+}
+
 .table-modern th {
   background: #f3f4f6;
   font-weight: 600;
   color: #374151;
 }
+
 .table-modern tr:last-child td {
   border-bottom: none;
 }
+
 .table-modern tbody tr:hover {
   background: #f0fdf4;
   transition: background 0.2s;
+}
+
+/* Mobile-specific styles */
+@media (max-width: 767px) {
+  .table-modern {
+    font-size: 0.875rem;
+  }
+  
+  .table-modern th, .table-modern td {
+    padding: 0.5rem;
+  }
+  
+  /* Make tables scrollable on mobile */
+  .table-container {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
+/* Touch-friendly button styles */
+button, [role="button"] {
+  min-height: 44px;
+  min-width: 44px;
+}
+
+/* Prevent zoom on input focus on iOS */
+@media screen and (-webkit-min-device-pixel-ratio: 0) {
+  select,
+  textarea,
+  input {
+    font-size: 16px;
+  }
+}
+
+/* Smooth scrolling for mobile */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Improve focus visibility for accessibility */
+*:focus {
+  outline: 2px solid #16a34a;
+  outline-offset: 2px;
+}
+
+/* Custom scrollbar for webkit browsers */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
 }
