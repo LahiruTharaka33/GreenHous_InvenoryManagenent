@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import PushNotificationManager from "./components/PushNotificationManager";
 import InstallPrompt from "./components/InstallPrompt";
+import InstallButton from "./components/InstallButton";
 
 export default function Home() {
   return (
@@ -24,6 +25,7 @@ export default function Home() {
             <Link href="/auth/signup" className="bg-gradient-to-r from-green-500 to-emerald-600 text-white px-6 py-2 rounded-lg hover:shadow-lg transition-all duration-300">
               Get Started
             </Link>
+            <InstallButton />
           </div>
         </div>
       </nav>
@@ -52,6 +54,7 @@ export default function Home() {
               <Link href="/dashboard/admin" className="border-2 border-green-500 text-green-600 px-8 py-4 rounded-xl font-semibold hover:bg-green-50 transition-all duration-300">
                 View Demo
               </Link>
+              <InstallButton />
             </div>
 
             <div className="flex items-center space-x-6 text-sm text-gray-500">
@@ -212,6 +215,44 @@ export default function Home() {
               Manage multiple users, assign roles, and track team activities 
               to ensure efficient greenhouse operations.
             </p>
+          </div>
+        </div>
+      </section>
+
+      {/* Install App Section */}
+      <section className="container mx-auto px-6 py-20">
+        <div className="bg-gradient-to-br from-purple-500 via-pink-500 to-red-500 rounded-3xl p-12 text-center text-white">
+          <div className="max-w-2xl mx-auto">
+            <h2 className="text-4xl font-bold mb-4">
+              Install GreenHouse App
+            </h2>
+            <p className="text-xl mb-8 opacity-90">
+              Get the full app experience with offline access, push notifications, and native performance. 
+              Install once, use anywhere!
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+              <InstallButton />
+              <div className="flex items-center space-x-4 text-sm opacity-80">
+                <div className="flex items-center space-x-2">
+                  <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                  </svg>
+                  <span>Offline Access</span>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                  </svg>
+                  <span>Push Notifications</span>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                  </svg>
+                  <span>Native Performance</span>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
