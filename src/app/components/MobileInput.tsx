@@ -42,3 +42,5 @@ const MobileInput = forwardRef<HTMLInputElement, MobileInputProps>(
 MobileInput.displayName = "MobileInput";
 
 export default MobileInput; 
+
+//ade
