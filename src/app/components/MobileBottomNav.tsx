@@ -1,24 +1,64 @@
 "use client";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useSession } from "next-auth/react";
+import { useEffect, useState } from "react";
 import {
   HomeIcon,
   BuildingLibraryIcon,
   ClipboardDocumentListIcon,
   CalendarDaysIcon,
   UserIcon,
+  ClipboardDocumentIcon,
 } from "@heroicons/react/24/outline";
 
-const mobileNavLinks = [
+interface User {
+  id: string;
+  name?: string;
+  email: string;
+  role: string;
+}
+
+const adminNavLinks = [
   { name: "Dashboard", href: "/dashboard/admin", icon: HomeIcon },
   { name: "Greenhouses", href: "/dashboard/admin/greenhouses", icon: BuildingLibraryIcon },
   { name: "Inventory", href: "/dashboard/admin/inventory", icon: ClipboardDocumentListIcon },
   { name: "Schedules", href: "/dashboard/admin/schedules", icon: CalendarDaysIcon },
+  { name: "Assignments", href: "/dashboard/admin/assignments", icon: ClipboardDocumentIcon },
+  { name: "Profile", href: "/profile", icon: UserIcon },
+];
+
+const userNavLinks = [
+  { name: "Dashboard", href: "/dashboard/user", icon: HomeIcon },
+  { name: "Greenhouses", href: "/dashboard/user/greenhouses", icon: BuildingLibraryIcon },
+  { name: "Inventory", href: "/dashboard/user/inventory", icon: ClipboardDocumentListIcon },
+  { name: "Schedules", href: "/dashboard/user/schedules", icon: CalendarDaysIcon },
+  { name: "Assignments", href: "/dashboard/user/assignments", icon: ClipboardDocumentIcon },
   { name: "Profile", href: "/profile", icon: UserIcon },
 ];
 
 export default function MobileBottomNav() {
   const pathname = usePathname();
+  const { data: session, status } = useSession();
+  const [role, setRole] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (status === "authenticated" && session?.user) {
+      fetch('/api/users')
+        .then(res => res.json())
+        .then(users => {
+          const u = users.find((u: User) => u.id === (session.user as User).id);
+          setRole(u?.role || null);
+        });
+    }
+  }, [status, session]);
+
+  // Don't show navigation on the landing page
+  if (pathname === '/') {
+    return null;
+  }
+
+  const mobileNavLinks = role === 'ADMIN' ? adminNavLinks : userNavLinks;
 
   return (
     <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 z-50 shadow-lg">

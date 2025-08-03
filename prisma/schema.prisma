@@ -35,12 +35,19 @@ model Greenhouse {
 }
 
 model Assignment {
-  id           String     @id @default(cuid())
+  id           String         @id @default(cuid())
   userId       String
   greenhouseId String
-  assignedAt   DateTime   @default(now())
-  greenhouse   Greenhouse @relation(fields: [greenhouseId], references: [id])
-  user         User       @relation(fields: [userId], references: [id])
+  title        String
+  description  String?
+  priority     TaskPriority   @default(MEDIUM)
+  status       TaskStatus     @default(PENDING)
+  dueDate      DateTime?
+  assignedAt   DateTime       @default(now())
+  completedAt  DateTime?
+  notes        String?
+  greenhouse   Greenhouse     @relation(fields: [greenhouseId], references: [id])
+  user         User           @relation(fields: [userId], references: [id])
 }
 
 model FertilizerSchedule {
@@ -92,4 +99,18 @@ enum InventoryType {
   SEED
   PESTICIDE
   TOOL
+}
+
+enum TaskPriority {
+  LOW
+  MEDIUM
+  HIGH
+  URGENT
+}
+
+enum TaskStatus {
+  PENDING
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
 }

@@ -10,7 +10,24 @@ async function getCurrentUserRole() {
 
 // GET /api/assignments
 export async function GET(_req: NextRequest) {
-  const assignments = await prisma.assignment.findMany();
+  const assignments = await prisma.assignment.findMany({
+    include: {
+      user: {
+        select: {
+          id: true,
+          name: true,
+          email: true
+        }
+      },
+      greenhouse: {
+        select: {
+          id: true,
+          name: true,
+          location: true
+        }
+      }
+    }
+  });
   return NextResponse.json(assignments);
 }
 
@@ -21,7 +38,25 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
   }
   const data = await req.json();
-  const assignment = await prisma.assignment.create({ data });
+  const assignment = await prisma.assignment.create({ 
+    data,
+    include: {
+      user: {
+        select: {
+          id: true,
+          name: true,
+          email: true
+        }
+      },
+      greenhouse: {
+        select: {
+          id: true,
+          name: true,
+          location: true
+        }
+      }
+    }
+  });
   return NextResponse.json(assignment);
 }
 
@@ -33,7 +68,26 @@ export async function PUT(req: NextRequest) {
   }
   const data = await req.json();
   const { id, ...update } = data;
-  const assignment = await prisma.assignment.update({ where: { id }, data: update });
+  const assignment = await prisma.assignment.update({ 
+    where: { id }, 
+    data: update,
+    include: {
+      user: {
+        select: {
+          id: true,
+          name: true,
+          email: true
+        }
+      },
+      greenhouse: {
+        select: {
+          id: true,
+          name: true,
+          location: true
+        }
+      }
+    }
+  });
   return NextResponse.json(assignment);
 }
 

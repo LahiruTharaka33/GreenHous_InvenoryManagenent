@@ -11,6 +11,7 @@ export default function UserLayout({ children }: { children: React.ReactNode }) 
         <Link href="/dashboard/user/greenhouses">My Greenhouses</Link>
         <Link href="/dashboard/user/schedules">Fertilizer Schedules</Link>
         <Link href="/dashboard/user/inventory">Inventory Usage</Link>
+        <Link href="/dashboard/user/assignments">My Tasks</Link>
       </nav>
       <main>{children}</main>
     </div>
