@@ -24,11 +24,24 @@
   }
 }
 
+/* PWA Mobile-First Optimizations */
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+  -ms-text-size-adjust: 100%;
+}
+
 body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-sans), Arial, Helvetica, sans-serif;
   min-height: 100vh;
+  margin: 0;
+  padding: 0;
   -webkit-tap-highlight-color: transparent;
   -webkit-touch-callout: none;
   -webkit-user-select: none;
@@ -36,10 +49,15 @@ body {
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
+  /* Prevent horizontal scroll on mobile */
+  overflow-x: hidden;
+  /* Optimize for mobile performance */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 /* Enable text selection for content areas */
-.card, p, h1, h2, h3, h4, h5, h6, span, div {
+.card, p, h1, h2, h3, h4, h5, h6, span, div, input, textarea {
   -webkit-user-select: text;
   -khtml-user-select: text;
   -moz-user-select: text;
@@ -72,6 +90,7 @@ body {
   padding: 0.75rem;
   border-bottom: 1px solid #e5e7eb;
   background: #fff;
+  color: #111827; /* Explicit dark text color for visibility */
 }
 
 @media (min-width: 768px) {
@@ -83,7 +102,7 @@ body {
 .table-modern th {
   background: #f3f4f6;
   font-weight: 600;
-  color: #374151;
+  color: #111827; /* Darker color for better visibility */
 }
 
 .table-modern tr:last-child td {
@@ -95,6 +114,70 @@ body {
   transition: background 0.2s;
 }
 
+/* Ensure all table text is visible */
+.table-modern,
+.table-modern * {
+  color: #111827 !important;
+}
+
+/* Override any light text colors in tables */
+.table-modern th,
+.table-modern td,
+.table-modern tr {
+  color: #111827 !important;
+}
+
+/* Force text visibility for all table elements */
+table,
+table *,
+th,
+td,
+tr {
+  color: #111827 !important;
+}
+
+/* Ensure MobileTable text is always visible */
+.MobileTable,
+.MobileTable *,
+[class*="MobileTable"] {
+  color: #111827 !important;
+}
+
+/* Override any potential light text colors */
+.text-gray-500,
+.text-gray-400,
+.text-gray-300 {
+  color: #111827 !important;
+}
+
+/* Ensure form text is visible */
+input,
+select,
+textarea,
+label {
+  color: #111827 !important;
+}
+
+/* MobileTable specific overrides */
+.mobile-table-container,
+.mobile-table-container * {
+  color: #111827 !important;
+}
+
+.mobile-table-container .text-gray-600,
+.mobile-table-container .text-gray-500,
+.mobile-table-container .text-gray-400 {
+  color: #111827 !important;
+}
+
+/* Force all text in tables to be dark */
+.mobile-table-container span,
+.mobile-table-container div,
+.mobile-table-container td,
+.mobile-table-container th {
+  color: #111827 !important;
+}
+
 /* Mobile-specific styles */
 @media (max-width: 767px) {
   .table-modern {
@@ -103,6 +186,7 @@ body {
   
   .table-modern th, .table-modern td {
     padding: 0.5rem;
+    color: #111827; /* Ensure text is visible on mobile */
   }
   
   /* Make tables scrollable on mobile */
@@ -112,10 +196,44 @@ body {
   }
 }
 
-/* Touch-friendly button styles */
-button, [role="button"] {
+/* PWA Touch-Friendly Design */
+/* Minimum touch target size for all interactive elements */
+button, 
+[role="button"], 
+a, 
+input[type="button"], 
+input[type="submit"], 
+input[type="reset"],
+select,
+textarea {
   min-height: 44px;
   min-width: 44px;
+}
+
+/* Mobile-optimized touch targets */
+@media (max-width: 767px) {
+  /* Ensure buttons are large enough for thumb navigation */
+  button, 
+  [role="button"], 
+  a {
+    min-height: 48px;
+    min-width: 48px;
+  }
+  
+  /* Improve tap targets for navigation */
+  nav a, 
+  nav button {
+    padding: 12px;
+  }
+  
+  /* Optimize form elements for mobile */
+  input, 
+  select, 
+  textarea {
+    font-size: 16px; /* Prevents zoom on iOS */
+    padding: 12px;
+    min-height: 48px;
+  }
 }
 
 /* Prevent zoom on input focus on iOS */
@@ -127,9 +245,127 @@ button, [role="button"] {
   }
 }
 
-/* Smooth scrolling for mobile */
-html {
-  scroll-behavior: smooth;
+/* Mobile Navigation Optimizations */
+.mobile-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 50;
+  background: white;
+  border-top: 1px solid #e5e7eb;
+  box-shadow: 0 -4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+/* Mobile Menu Overlay */
+.mobile-menu-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 100;
+  backdrop-filter: blur(4px);
+}
+
+.mobile-menu-content {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 320px;
+  height: 100%;
+  background: white;
+  box-shadow: -4px 0 6px -1px rgba(0, 0, 0, 0.1);
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Mobile Card Layout */
+.mobile-card {
+  background: white;
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 12px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e5e7eb;
+}
+
+@media (min-width: 768px) {
+  .mobile-card {
+    padding: 24px;
+    margin-bottom: 16px;
+    border-radius: 16px;
+  }
+}
+
+/* Mobile-First Spacing */
+.mobile-spacing {
+  padding: 16px;
+}
+
+@media (min-width: 768px) {
+  .mobile-spacing {
+    padding: 24px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .mobile-spacing {
+    padding: 32px;
+  }
+}
+
+/* Mobile Typography */
+.mobile-text {
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+@media (min-width: 768px) {
+  .mobile-text {
+    font-size: 16px;
+  }
+}
+
+/* Mobile Button Styles */
+.mobile-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 16px;
+  border-radius: 8px;
+  font-weight: 500;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  min-height: 48px;
+  min-width: 48px;
+  border: none;
+  cursor: pointer;
+}
+
+@media (min-width: 768px) {
+  .mobile-button {
+    padding: 12px 20px;
+    border-radius: 10px;
+  }
+}
+
+/* Mobile Input Styles */
+.mobile-input {
+  width: 100%;
+  padding: 12px 16px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 16px;
+  min-height: 48px;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.mobile-input:focus {
+  outline: none;
+  border-color: #16a34a;
+  box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.1);
 }
 
 /* Improve focus visibility for accessibility */
@@ -156,4 +392,89 @@ html {
 
 ::-webkit-scrollbar-thumb:hover {
   background: #a8a8a8;
+}
+
+/* Mobile-specific scrollbar */
+@media (max-width: 767px) {
+  ::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
+  }
+}
+
+/* PWA Loading States */
+.loading-skeleton {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: loading 1.5s infinite;
+}
+
+@keyframes loading {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+/* Mobile Gesture Support */
+.swipeable {
+  touch-action: pan-y pinch-zoom;
+}
+
+/* Mobile Performance Optimizations */
+.gpu-accelerated {
+  transform: translateZ(0);
+  will-change: transform;
+}
+
+/* Mobile Safe Areas */
+.safe-area-top {
+  padding-top: env(safe-area-inset-top);
+}
+
+.safe-area-bottom {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+.safe-area-left {
+  padding-left: env(safe-area-inset-left);
+}
+
+.safe-area-right {
+  padding-right: env(safe-area-inset-right);
+}
+
+/* CRITICAL: Force all text visibility across the entire app */
+* {
+  color: #111827 !important;
+}
+
+/* Allow specific overrides for interactive elements */
+button,
+a,
+input,
+select,
+textarea {
+  color: inherit !important;
+}
+
+/* Ensure table text is always visible */
+table,
+table *,
+th,
+td,
+tr,
+span,
+div {
+  color: #111827 !important;
+}
+
+/* Override any light text classes */
+.text-gray-500,
+.text-gray-400,
+.text-gray-300,
+.text-gray-600 {
+  color: #111827 !important;
 }

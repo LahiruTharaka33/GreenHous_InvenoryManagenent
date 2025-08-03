@@ -10,7 +10,17 @@ async function getCurrentUserRole() {
 
 // GET /api/greenhouses
 export async function GET(_req: NextRequest) {
-  const greenhouses = await prisma.greenhouse.findMany();
+  const greenhouses = await prisma.greenhouse.findMany({
+    include: {
+      owner: {
+        select: {
+          id: true,
+          name: true,
+          email: true
+        }
+      }
+    }
+  });
   return NextResponse.json(greenhouses);
 }
 
@@ -21,7 +31,18 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
   }
   const data = await req.json();
-  const greenhouse = await prisma.greenhouse.create({ data });
+  const greenhouse = await prisma.greenhouse.create({ 
+    data,
+    include: {
+      owner: {
+        select: {
+          id: true,
+          name: true,
+          email: true
+        }
+      }
+    }
+  });
   return NextResponse.json(greenhouse);
 }
 
@@ -33,7 +54,19 @@ export async function PUT(req: NextRequest) {
   }
   const data = await req.json();
   const { id, ...update } = data;
-  const greenhouse = await prisma.greenhouse.update({ where: { id }, data: update });
+  const greenhouse = await prisma.greenhouse.update({ 
+    where: { id }, 
+    data: update,
+    include: {
+      owner: {
+        select: {
+          id: true,
+          name: true,
+          email: true
+        }
+      }
+    }
+  });
   return NextResponse.json(greenhouse);
 }
 

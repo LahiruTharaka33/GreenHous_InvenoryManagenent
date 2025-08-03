@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useState } from 'react';
+import MobileTable from "@/app/components/MobileTable";
 
 interface InventoryItem {
   id: string;
@@ -28,34 +29,27 @@ export default function UserInventoryPage() {
     fetchItems();
   }, []);
 
-  if (loading) return <div className="p-8">Loading...</div>;
-  if (error) return <div className="p-8 text-red-600">{error}</div>;
+  // Define columns for the user inventory table
+  const inventoryColumns = [
+    { key: "name", label: "Name", mobileLabel: "Name" },
+    { key: "type", label: "Type", mobileLabel: "Type" },
+    { key: "quantity", label: "Quantity", mobileLabel: "Qty" },
+    { key: "unit", label: "Unit", mobileLabel: "Unit" },
+    { key: "threshold", label: "Low-stock Threshold", mobileLabel: "Threshold" }
+  ];
+
+  if (loading) return <div className="p-4 md:p-8">Loading...</div>;
+  if (error) return <div className="p-4 md:p-8 text-red-600">{error}</div>;
 
   return (
-    <div className="p-8">
-      <h1 className="text-2xl font-bold mb-4">Inventory</h1>
-      <table className="w-full border mt-4 bg-white">
-        <thead>
-          <tr className="bg-gray-100">
-            <th className="p-2 border">Name</th>
-            <th className="p-2 border">Type</th>
-            <th className="p-2 border">Quantity</th>
-            <th className="p-2 border">Unit</th>
-            <th className="p-2 border">Low-stock Threshold</th>
-          </tr>
-        </thead>
-        <tbody>
-          {items.map(item => (
-            <tr key={item.id}>
-              <td className="p-2 border">{item.name}</td>
-              <td className="p-2 border">{item.type}</td>
-              <td className="p-2 border">{item.quantity}</td>
-              <td className="p-2 border">{item.unit}</td>
-              <td className="p-2 border">{item.threshold}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+    <div className="p-4 md:p-8">
+      <h1 className="text-2xl font-bold mb-6 text-gray-900">Inventory</h1>
+      <MobileTable
+        data={items}
+        columns={inventoryColumns}
+        searchable={true}
+        sortable={true}
+      />
     </div>
   );
 } 

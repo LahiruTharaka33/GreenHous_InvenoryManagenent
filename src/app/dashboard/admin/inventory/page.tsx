@@ -2,7 +2,9 @@
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from 'react';
 import SkeletonTable from "@/app/components/SkeletonTable";
-import { PlusIcon } from "@heroicons/react/24/solid";
+import MobileTable from "@/app/components/MobileTable";
+import MobileButton from "@/app/components/MobileButton";
+import { PlusIcon, PencilIcon, TrashIcon } from "@heroicons/react/24/solid";
 
 interface InventoryItem {
   id: string;
@@ -44,29 +46,29 @@ function InventoryForm({ onSave, onCancel, initial }: InventoryFormProps) {
       }}
       className="flex flex-col gap-4 p-4 border rounded-xl bg-white shadow max-w-md"
     >
-      <label className="font-semibold mb-1">Name
-        <input className="border rounded-lg p-2 w-full focus:ring-2 focus:ring-green-200 focus:border-green-500 transition" value={name} onChange={e => setName(e.target.value)} required />
+      <label className="font-semibold mb-1 text-gray-900">Name
+        <input className="border rounded-lg p-2 w-full focus:ring-2 focus:ring-green-200 focus:border-green-500 transition text-gray-900" value={name} onChange={e => setName(e.target.value)} required />
       </label>
-      <label className="font-semibold mb-1">Type
-        <select className="border rounded-lg p-2 w-full focus:ring-2 focus:ring-green-200 focus:border-green-500 transition" value={type} onChange={e => setType(e.target.value)}>
+      <label className="font-semibold mb-1 text-gray-900">Type
+        <select className="border rounded-lg p-2 w-full focus:ring-2 focus:ring-green-200 focus:border-green-500 transition text-gray-900" value={type} onChange={e => setType(e.target.value)}>
           <option value="FERTILIZER">Fertilizer</option>
           <option value="SEED">Seed</option>
           <option value="PESTICIDE">Pesticide</option>
           <option value="TOOL">Tool</option>
         </select>
       </label>
-      <label className="font-semibold mb-1">Quantity
-        <input className="border rounded-lg p-2 w-full focus:ring-2 focus:ring-green-200 focus:border-green-500 transition" type="number" value={quantity} onChange={e => setQuantity(Number(e.target.value))} required />
+      <label className="font-semibold mb-1 text-gray-900">Quantity
+        <input className="border rounded-lg p-2 w-full focus:ring-2 focus:ring-green-200 focus:border-green-500 transition text-gray-900" type="number" value={quantity} onChange={e => setQuantity(Number(e.target.value))} required />
       </label>
-      <label className="font-semibold mb-1">Unit
-        <input className="border rounded-lg p-2 w-full focus:ring-2 focus:ring-green-200 focus:border-green-500 transition" value={unit} onChange={e => setUnit(e.target.value)} required />
+      <label className="font-semibold mb-1 text-gray-900">Unit
+        <input className="border rounded-lg p-2 w-full focus:ring-2 focus:ring-green-200 focus:border-green-500 transition text-gray-900" value={unit} onChange={e => setUnit(e.target.value)} required />
       </label>
-      <label className="font-semibold mb-1">Low-stock Threshold
-        <input className="border rounded-lg p-2 w-full focus:ring-2 focus:ring-green-200 focus:border-green-500 transition" type="number" value={threshold} onChange={e => setThreshold(Number(e.target.value))} required />
+      <label className="font-semibold mb-1 text-gray-900">Low-stock Threshold
+        <input className="border rounded-lg p-2 w-full focus:ring-2 focus:ring-green-200 focus:border-green-500 transition text-gray-900" type="number" value={threshold} onChange={e => setThreshold(Number(e.target.value))} required />
       </label>
       <div className="flex gap-2 mt-2">
-        <button type="submit" className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg font-semibold transition">Save</button>
-        <button type="button" className="bg-gray-300 hover:bg-gray-400 px-4 py-2 rounded-lg font-semibold transition" onClick={onCancel}>Cancel</button>
+        <MobileButton type="submit">Save</MobileButton>
+        <MobileButton variant="secondary" onClick={onCancel}>Cancel</MobileButton>
       </div>
     </form>
   );
@@ -156,69 +158,85 @@ export default function AdminInventoryPage() {
     setLoading(false);
   };
 
+  // Define columns for the inventory table
+  const inventoryColumns = [
+    { key: "name", label: "Name", mobileLabel: "Name" },
+    { key: "type", label: "Type", mobileLabel: "Type" },
+    { key: "quantity", label: "Quantity", mobileLabel: "Qty" },
+    { key: "unit", label: "Unit", mobileLabel: "Unit" },
+    { key: "threshold", label: "Low-stock Threshold", mobileLabel: "Threshold" },
+    ...(role === 'ADMIN' ? [{
+      key: "actions",
+      label: "Actions",
+      mobileLabel: "Actions",
+      render: (value: any, row: InventoryItem) => (
+        <div className="flex gap-2">
+          <MobileButton
+            size="sm"
+            variant="secondary"
+            leftIcon={<PencilIcon className="h-4 w-4" />}
+            onClick={() => setEditItem(row)}
+          >
+            Edit
+          </MobileButton>
+          <MobileButton
+            size="sm"
+            variant="danger"
+            leftIcon={<TrashIcon className="h-4 w-4" />}
+            onClick={() => handleDelete(row.id)}
+          >
+            Delete
+          </MobileButton>
+        </div>
+      )
+    }] : [])
+  ];
+
   if (loading && !showForm && !editItem) {
     return (
-      <div className="p-8">
+      <div className="p-4 md:p-8">
         <SkeletonTable rows={5} columns={role === 'ADMIN' ? 6 : 5} />
       </div>
     );
   }
-  if (error) return <div className="p-8 text-red-600">{error}</div>;
+  if (error) return <div className="p-4 md:p-8 text-red-600">{error}</div>;
 
   return (
-    <div className="p-8">
-      <div className="flex justify-between items-center mb-4">
-        <h1 className="text-2xl font-bold">Inventory</h1>
+    <div className="p-4 md:p-8">
+      <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-4 mb-6">
+        <h1 className="text-2xl font-bold text-gray-900">Inventory</h1>
         {role === 'ADMIN' && (
-          <button className="flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white px-5 py-2 rounded-lg font-semibold shadow transition text-base" onClick={() => setShowForm(true)}>
-            <PlusIcon className="h-5 w-5" />
+          <MobileButton
+            leftIcon={<PlusIcon className="h-5 w-5" />}
+            onClick={() => setShowForm(true)}
+          >
             Add New Item
-          </button>
+          </MobileButton>
         )}
       </div>
+      
       {showForm && (
-        <InventoryForm onSave={handleCreate} onCancel={() => setShowForm(false)} />
+        <div className="mb-6">
+          <InventoryForm onSave={handleCreate} onCancel={() => setShowForm(false)} />
+        </div>
       )}
+      
       {editItem && (
-        <InventoryForm
-          initial={editItem}
-          onSave={data => handleEdit({ ...editItem, ...data })}
-          onCancel={() => setEditItem(null)}
-        />
+        <div className="mb-6">
+          <InventoryForm
+            initial={editItem}
+            onSave={data => handleEdit({ ...editItem, ...data })}
+            onCancel={() => setEditItem(null)}
+          />
+        </div>
       )}
-      <table className="table-modern w-full border mt-4 bg-white">
-        <thead>
-          <tr className="bg-gray-100">
-            <th className="p-2 border">Name</th>
-            <th className="p-2 border">Type</th>
-            <th className="p-2 border">Quantity</th>
-            <th className="p-2 border">Unit</th>
-            <th className="p-2 border">Low-stock Threshold</th>
-            {role === 'ADMIN' && <th className="p-2 border">Actions</th>}
-          </tr>
-        </thead>
-        <tbody>
-          {items.map(item => (
-            <tr key={item.id}>
-              <td className="p-2 border">{item.name}</td>
-              <td className="p-2 border">{item.type}</td>
-              <td className="p-2 border">{item.quantity}</td>
-              <td className="p-2 border">{item.unit}</td>
-              <td className="p-2 border">{item.threshold}</td>
-              {role === 'ADMIN' && (
-                <td className="p-2 border flex gap-2">
-                  <button className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded-lg font-semibold transition" onClick={() => setEditItem(item)}>
-                    Edit
-                  </button>
-                  <button className="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded-lg font-semibold transition" onClick={() => handleDelete(item.id)}>
-                    Delete
-                  </button>
-                </td>
-              )}
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      
+      <MobileTable
+        data={items}
+        columns={inventoryColumns}
+        searchable={true}
+        sortable={true}
+      />
     </div>
   );
 } 

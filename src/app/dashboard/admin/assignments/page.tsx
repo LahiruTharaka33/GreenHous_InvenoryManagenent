@@ -2,7 +2,9 @@
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from 'react';
 import SkeletonTable from "@/app/components/SkeletonTable";
-import { PlusIcon } from "@heroicons/react/24/solid";
+import MobileTable from "@/app/components/MobileTable";
+import MobileButton from "@/app/components/MobileButton";
+import { PlusIcon, PencilIcon, TrashIcon } from "@heroicons/react/24/solid";
 
 interface Assignment {
   id: string;
@@ -42,23 +44,23 @@ function AssignmentForm({ onSave, onCancel, initial, users, greenhouses }: Assig
       }}
       className="flex flex-col gap-4 p-4 border rounded-xl bg-white shadow max-w-md"
     >
-      <label className="font-semibold mb-1">User
-        <select className="border rounded-lg p-2 w-full focus:ring-2 focus:ring-green-200 focus:border-green-500 transition" value={userId} onChange={e => setUserId(e.target.value)} required>
+      <label className="font-semibold mb-1 text-gray-900">User
+        <select className="border rounded-lg p-2 w-full focus:ring-2 focus:ring-green-200 focus:border-green-500 transition text-gray-900" value={userId} onChange={e => setUserId(e.target.value)} required>
           {users.map(u => (
             <option key={u.id} value={u.id}>{u.name || u.email}</option>
           ))}
         </select>
       </label>
-      <label className="font-semibold mb-1">Greenhouse
-        <select className="border rounded-lg p-2 w-full focus:ring-2 focus:ring-green-200 focus:border-green-500 transition" value={greenhouseId} onChange={e => setGreenhouseId(e.target.value)} required>
+      <label className="font-semibold mb-1 text-gray-900">Greenhouse
+        <select className="border rounded-lg p-2 w-full focus:ring-2 focus:ring-green-200 focus:border-green-500 transition text-gray-900" value={greenhouseId} onChange={e => setGreenhouseId(e.target.value)} required>
           {greenhouses.map(g => (
             <option key={g.id} value={g.id}>{g.name}</option>
           ))}
         </select>
       </label>
       <div className="flex gap-2 mt-2">
-        <button type="submit" className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg font-semibold transition">Save</button>
-        <button type="button" className="bg-gray-300 hover:bg-gray-400 px-4 py-2 rounded-lg font-semibold transition" onClick={onCancel}>Cancel</button>
+        <MobileButton type="submit">Save</MobileButton>
+        <MobileButton variant="secondary" onClick={onCancel}>Cancel</MobileButton>
       </div>
     </form>
   );
@@ -164,65 +166,94 @@ export default function AdminAssignmentsPage() {
     setLoading(false);
   };
 
+  // Define columns for the assignments table
+  const assignmentColumns = [
+    { 
+      key: "userId", 
+      label: "User", 
+      mobileLabel: "User",
+      render: (value: string) => users.find(u => u.id === value)?.name || users.find(u => u.id === value)?.email || value
+    },
+    { 
+      key: "greenhouseId", 
+      label: "Greenhouse", 
+      mobileLabel: "GH",
+      render: (value: string) => greenhouses.find(g => g.id === value)?.name || value
+    },
+    ...(role === 'ADMIN' ? [{
+      key: "actions",
+      label: "Actions",
+      mobileLabel: "Actions",
+      render: (value: any, row: Assignment) => (
+        <div className="flex gap-2">
+          <MobileButton
+            size="sm"
+            variant="secondary"
+            leftIcon={<PencilIcon className="h-4 w-4" />}
+            onClick={() => setEditAssignment(row)}
+          >
+            Edit
+          </MobileButton>
+          <MobileButton
+            size="sm"
+            variant="danger"
+            leftIcon={<TrashIcon className="h-4 w-4" />}
+            onClick={() => handleDelete(row.id)}
+          >
+            Delete
+          </MobileButton>
+        </div>
+      )
+    }] : [])
+  ];
+
   if (loading && !showForm && !editAssignment) {
     return (
-      <div className="p-8">
+      <div className="p-4 md:p-8">
         <SkeletonTable rows={5} columns={role === 'ADMIN' ? 3 : 2} />
       </div>
     );
   }
-  if (error) return <div className="p-8 text-red-600">{error}</div>;
+  if (error) return <div className="p-4 md:p-8 text-red-600">{error}</div>;
 
   return (
-    <div className="p-8">
-      <div className="flex justify-between items-center mb-4">
-        <h1 className="text-2xl font-bold">Assignments</h1>
+    <div className="p-4 md:p-8">
+      <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-4 mb-6">
+        <h1 className="text-2xl font-bold text-gray-900">Assignments</h1>
         {role === 'ADMIN' && (
-          <button className="flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white px-5 py-2 rounded-lg font-semibold shadow transition text-base" onClick={() => setShowForm(true)}>
-            <PlusIcon className="h-5 w-5" />
+          <MobileButton
+            leftIcon={<PlusIcon className="h-5 w-5" />}
+            onClick={() => setShowForm(true)}
+          >
             Add New Assignment
-          </button>
+          </MobileButton>
         )}
       </div>
+      
       {showForm && (
-        <AssignmentForm users={users} greenhouses={greenhouses} onSave={handleCreate} onCancel={() => setShowForm(false)} />
+        <div className="mb-6">
+          <AssignmentForm users={users} greenhouses={greenhouses} onSave={handleCreate} onCancel={() => setShowForm(false)} />
+        </div>
       )}
+      
       {editAssignment && (
-        <AssignmentForm
-          users={users}
-          greenhouses={greenhouses}
-          initial={editAssignment}
-          onSave={data => handleEdit({ ...editAssignment, ...data })}
-          onCancel={() => setEditAssignment(null)}
-        />
+        <div className="mb-6">
+          <AssignmentForm
+            users={users}
+            greenhouses={greenhouses}
+            initial={editAssignment}
+            onSave={data => handleEdit({ ...editAssignment, ...data })}
+            onCancel={() => setEditAssignment(null)}
+          />
+        </div>
       )}
-      <table className="table-modern w-full border mt-4 bg-white">
-        <thead>
-          <tr className="bg-gray-100">
-            <th className="p-2 border">User</th>
-            <th className="p-2 border">Greenhouse</th>
-            {role === 'ADMIN' && <th className="p-2 border">Actions</th>}
-          </tr>
-        </thead>
-        <tbody>
-          {assignments.map(a => (
-            <tr key={a.id}>
-              <td className="p-2 border">{users.find(u => u.id === a.userId)?.name || a.userId}</td>
-              <td className="p-2 border">{greenhouses.find(g => g.id === a.greenhouseId)?.name || a.greenhouseId}</td>
-              {role === 'ADMIN' && (
-                <td className="p-2 border flex gap-2">
-                  <button className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded-lg font-semibold transition" onClick={() => setEditAssignment(a)}>
-                    Edit
-                  </button>
-                  <button className="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded-lg font-semibold transition" onClick={() => handleDelete(a.id)}>
-                    Delete
-                  </button>
-                </td>
-              )}
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      
+      <MobileTable
+        data={assignments}
+        columns={assignmentColumns}
+        searchable={true}
+        sortable={true}
+      />
     </div>
   );
 } 

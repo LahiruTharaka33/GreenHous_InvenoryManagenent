@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth/next";
 import { authOptions, SessionUser } from '../../../lib/authOptions';
 import { prisma } from '../../../prisma';
+import bcrypt from 'bcryptjs';
 
 // GET /api/users
 export async function GET(_req: NextRequest) {
@@ -9,7 +10,27 @@ export async function GET(_req: NextRequest) {
   if (!session) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
-  const users = await prisma.user.findMany();
+  const users = await prisma.user.findMany({
+    include: {
+      ownedGreenhouses: {
+        select: {
+          id: true,
+          name: true
+        }
+      },
+      assignments: {
+        select: {
+          id: true,
+          greenhouse: {
+            select: {
+              id: true,
+              name: true
+            }
+          }
+        }
+      }
+    }
+  });
   return NextResponse.json(users);
 }
 
@@ -21,7 +42,36 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
   const data = await req.json();
-  const user = await prisma.user.create({ data });
+  
+  // Hash password if provided
+  if (data.password) {
+    const hashedPassword = await bcrypt.hash(data.password, 12);
+    data.hashedPassword = hashedPassword;
+    delete data.password;
+  }
+  
+  const user = await prisma.user.create({ 
+    data,
+    include: {
+      ownedGreenhouses: {
+        select: {
+          id: true,
+          name: true
+        }
+      },
+      assignments: {
+        select: {
+          id: true,
+          greenhouse: {
+            select: {
+              id: true,
+              name: true
+            }
+          }
+        }
+      }
+    }
+  });
   return NextResponse.json(user);
 }
 
@@ -34,7 +84,37 @@ export async function PUT(req: NextRequest) {
   }
   const data = await req.json();
   const { id, ...update } = data;
-  const user = await prisma.user.update({ where: { id }, data: update });
+  
+  // Hash password if provided
+  if (update.password) {
+    const hashedPassword = await bcrypt.hash(update.password, 12);
+    update.hashedPassword = hashedPassword;
+    delete update.password;
+  }
+  
+  const user = await prisma.user.update({ 
+    where: { id }, 
+    data: update,
+    include: {
+      ownedGreenhouses: {
+        select: {
+          id: true,
+          name: true
+        }
+      },
+      assignments: {
+        select: {
+          id: true,
+          greenhouse: {
+            select: {
+              id: true,
+              name: true
+            }
+          }
+        }
+      }
+    }
+  });
   return NextResponse.json(user);
 }
 

@@ -3,7 +3,7 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import MobileButton from "@/app/components/MobileButton";
-import MobileTable, { MobileTableHeader, MobileTableBody, MobileTableRow, MobileTableCell } from "@/app/components/MobileTable";
+import MobileTable from "@/app/components/MobileTable";
 import { 
   BuildingLibraryIcon, 
   ClipboardDocumentListIcon, 
@@ -39,6 +39,27 @@ export default function AdminDashboardPage() {
     { id: 2, action: "Inventory Updated", greenhouse: "GH-003", time: "15 min ago", status: "success" },
     { id: 3, action: "New Schedule Created", greenhouse: "GH-002", time: "1 hour ago", status: "info" },
     { id: 4, action: "User Login", greenhouse: "Admin", time: "2 hours ago", status: "info" },
+  ];
+
+  // Define columns for the activities table
+  const activityColumns = [
+    { key: "action", label: "Action", mobileLabel: "Action" },
+    { key: "greenhouse", label: "Greenhouse", mobileLabel: "GH" },
+    { key: "time", label: "Time", mobileLabel: "Time" },
+    { 
+      key: "status", 
+      label: "Status", 
+      mobileLabel: "Status",
+      render: (value: string) => (
+        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+          value === 'warning' ? 'bg-yellow-100 text-yellow-800' :
+          value === 'success' ? 'bg-green-100 text-green-800' :
+          'bg-blue-100 text-blue-800'
+        }`}>
+          {value}
+        </span>
+      )
+    },
   ];
 
   return (
@@ -81,34 +102,12 @@ export default function AdminDashboardPage() {
           <h2 className="text-lg font-semibold text-gray-900">Recent Activities</h2>
         </div>
         <div className="p-6">
-          <MobileTable>
-            <MobileTableHeader>
-              <MobileTableRow>
-                <MobileTableCell isHeader>Action</MobileTableCell>
-                <MobileTableCell isHeader>Greenhouse</MobileTableCell>
-                <MobileTableCell isHeader>Time</MobileTableCell>
-                <MobileTableCell isHeader>Status</MobileTableCell>
-              </MobileTableRow>
-            </MobileTableHeader>
-            <MobileTableBody>
-              {recentActivities.map((activity) => (
-                <MobileTableRow key={activity.id}>
-                  <MobileTableCell>{activity.action}</MobileTableCell>
-                  <MobileTableCell>{activity.greenhouse}</MobileTableCell>
-                  <MobileTableCell>{activity.time}</MobileTableCell>
-                  <MobileTableCell>
-                    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                      activity.status === 'warning' ? 'bg-yellow-100 text-yellow-800' :
-                      activity.status === 'success' ? 'bg-green-100 text-green-800' :
-                      'bg-blue-100 text-blue-800'
-                    }`}>
-                      {activity.status}
-                    </span>
-                  </MobileTableCell>
-                </MobileTableRow>
-              ))}
-            </MobileTableBody>
-          </MobileTable>
+          <MobileTable
+            data={recentActivities}
+            columns={activityColumns}
+            searchable={true}
+            sortable={true}
+          />
         </div>
       </div>
 

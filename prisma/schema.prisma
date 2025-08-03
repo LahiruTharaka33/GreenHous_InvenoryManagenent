@@ -19,14 +19,17 @@ model User {
   createdSchedules FertilizerSchedule[] @relation("CreatedBy")
   updatedSchedules FertilizerSchedule[] @relation("UpdatedBy")
   inventoryLogs    InventoryLog[]
+  ownedGreenhouses Greenhouse[]         @relation("GreenhouseOwner")
 }
 
 model Greenhouse {
   id          String               @id @default(cuid())
   name        String
   location    String?
+  ownerId     String?
   createdAt   DateTime             @default(now())
   updatedAt   DateTime             @updatedAt
+  owner       User?                @relation("GreenhouseOwner", fields: [ownerId], references: [id])
   assignments Assignment[]
   schedules   FertilizerSchedule[]
 }
