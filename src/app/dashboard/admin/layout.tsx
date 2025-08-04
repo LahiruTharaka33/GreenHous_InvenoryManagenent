@@ -50,9 +50,6 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     <div>
       <nav className="flex gap-4 p-4 border-b">
         <Link href="/dashboard/admin/users">Users</Link>
-        <Link href="/dashboard/admin/greenhouses">Greenhouses</Link>
-        <Link href="/dashboard/admin/schedules">Schedules</Link>
-        <Link href="/dashboard/admin/inventory">Inventory</Link>
         <Link href="/dashboard/admin/reports">Reports</Link>
       </nav>
       <main>{children}</main>
