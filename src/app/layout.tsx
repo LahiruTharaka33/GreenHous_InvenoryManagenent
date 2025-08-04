@@ -78,7 +78,7 @@ export default function RootLayout({
           <div className="flex min-h-screen">
             <Sidebar />
             <main className="flex-1 flex flex-col p-0 md:p-8 pt-0 md:pt-8 pb-20 md:pb-8">
-              <div className="w-full max-w-6xl mx-auto">
+              <div className="w-full max-w-6xl mx-auto px-4 md:px-0">
                 <SessionHeader />
                 {children}
               </div>
